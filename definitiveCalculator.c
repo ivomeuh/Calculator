@@ -16,14 +16,17 @@ int verifyInputValidity(int argsize, char argv[argsize])
 	return(terminate);
 }
 
-void getIntegers(int argsize, int argv[argsize], int integers, int *intID,  int *i, float *count)
+void getIntegers(int argsize, char argv[argsize], int integers[argsize], int *intID,  int *i, float *count)
 {
 	while (isdigit(argv[*i]) == 1)
 	{
-		integers[*intID] = (int) argv - 48;
+		integers[*intID] = (int) argv[*i] - 48;
+		//printf("integer[%d] = %d\n", *intID, integers[*intID]);
 		(*intID)++;
 		(*i)++;
+		//printf("i = %d\n", *i);
 		(*count)++;
+		//printf("count = %f\n", *count);
 	}
 }
 
@@ -32,7 +35,9 @@ void makeNumber(int argsize, int integers[argsize], int *intID, float *count, do
 	while (*count > 0)
 	{
 		*nb += integers[*intID - (int) *count] * pow(10, *count - 1);
+		//printf("nb = %f\n", *nb);
 		(*count)--;
+		//printf("count = %f\n", *count);
 	}
 }
 
@@ -44,8 +49,10 @@ void makeDecimal(int argsize, int integers[argsize], int *intID, float *count, d
 	while (*count > 0)
 	{
 		*nb += integers[*intID - (int) *count] * pow(10, negPow);
+		//printf("nb = %f\n", *nb);
 		negPow--;
 		(*count)--;
+		//printf("count = %f\n", *count);
 	}
 }
 
@@ -54,6 +61,7 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 	int terminate;
 
 	terminate = 0;
+	*comma = 0;
 	if (isdigit(currentChar) == 0)
 	{
 		if (*i + 1 < argsize && isdigit(nextChar) == 0)
@@ -78,6 +86,7 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 			}
 		}
 		(*i)++;
+		//printf("i = %d\n", *i);
 	}
 	return(terminate);
 }
@@ -85,6 +94,7 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 void getNumber(int argsize, double numbers[argsize], int *nbID, double *nb)
 {
 	numbers[*nbID] = *nb;
+	printf("numbers[%d] = %f\n", *nbID, numbers[*nbID]);
 	(*nbID)++;
 	*nb = 0;
 }
@@ -108,6 +118,7 @@ int main(int argc, char *argv[])
 	float count;
 	double nb;
 	int comma;
+	int nbOfOperators;
 	int integers[argsize];
 	int intID;
 	char operators[argsize];
@@ -120,12 +131,13 @@ int main(int argc, char *argv[])
 	count = 0;
 	nb = 0;
 	comma = 0;
+	nbOfOperators = 0;
 	intID = 0;
 	opID = 0;
 	nbID = 0;
 
 	terminate = verifyInputValidity(argsize, argv[1]);
-	if (terminate = 1)
+	if (terminate == 1)
 	{
 		return(0);
 	}
@@ -134,24 +146,23 @@ int main(int argc, char *argv[])
 		getIntegers(argsize, argv[1], integers, &intID, &i, &count);
 		makeNumber(argsize, integers, &intID, &count, &nb);
 		terminate = getOperator(argv[1][i], argv[1][i + 1], argsize, operators, &opID, &i, &count, &comma);
+		printf("comma = %d\n", comma);
 		if (terminate == 1)
 		{
 			return(0);
 		}
-		else if (comma == 0)
+		else if (comma == 0 && nb != 0)
 		{
-			getNumber(argsize, numbers[argsize], &nbID, &nb);
+			getNumber(argsize, numbers, &nbID, &nb);
 		}
 		else if (comma == 1)
 		{
 			getIntegers(argsize, argv[1], integers, &intID, &i, &count);
 			makeDecimal(argsize, integers, &intID, &count, &nb);
-			getNumber(argsize, numbers[argsize], &nbID, &nb);
+			getNumber(argsize, numbers, &nbID, &nb);
 		}
 	}
 	getNumberOfOperators(argsize, operators, &nbOfOperators);
 	printf("Operators string is set as: %s\n", operators);
-	printf("Numbers string is set as: %f %F\n", numbers[0], numbers [1]);
-	printf("Number of operators: %d\n", nbOfOperators);
 	return(0);
 }
