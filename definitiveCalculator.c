@@ -94,7 +94,7 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 void getNumber(int argsize, double numbers[argsize], int *nbID, double *nb)
 {
 	numbers[*nbID] = *nb;
-	printf("numbers[%d] = %f\n", *nbID, numbers[*nbID]);
+	//printf("numbers[%d] = %f\n", *nbID, numbers[*nbID]);
 	(*nbID)++;
 	*nb = 0;
 }
@@ -107,6 +107,46 @@ void getNumberOfOperators(int argsize, char operators[argsize], int *nbOfOperato
 	*nbOfOperators = strlen(operatorsSizeSample);
 }
 
+void add(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[nbOfOperators + 1], double finalResult[nbOfOperators + 1], int *j)
+{
+	//printf("numbers[%d] = %f\n", *j, numbers [*j]);
+	if (priorityResults[*j] != 0)
+	{
+		numbers[*j] = priorityResults[*j];
+		printf("numbers[%d] = priorityResults[%d] = %f\n", *j, *j, numbers[*j]);
+	}
+	if (priorityResults[*j + 1] != 0 && priorityResults[*j + 1] != '\0')
+	{
+		numbers[*j + 1] = priorityResults[*j + 1];
+		printf("numbers[%d] = priorityResults[%d] = %f\n", *j + 1, *j + 1, numbers[*j + 1]);
+	}
+	if (finalResult[*j] != 0)
+	{
+		numbers [*j] = finalResult[*j];
+		printf("numbers[%d] = finalResult[%d] = %f\n", *j, *j, numbers[*j]);
+	}
+	printf("numbers[%d] + numbers[%d] = %f + %f\n", *j, *j + 1, numbers[*j], numbers [*j + 1]);
+	finalResult[*j + 1] = numbers[*j] + numbers[*j + 1];
+}
+
+void doCalculus(int argsize, char operators[argsize], double numbers[argsize], int nbOfOperators, double priorityResults[nbOfOperators + 1], double finalResult[nbOfOperators + 1])
+{
+	int j;
+
+	//printf("numbers[0] = %f\n", numbers[0]);
+	j = 0;
+	while (j <= nbOfOperators)
+	{
+		if (operators[j] == '+')
+		{
+			add(argsize, numbers, nbOfOperators, priorityResults, finalResult, &j);
+			printf("finalResult[%d] = %f\n", j + 1, finalResult[j + 1]);
+			//j++;
+		}
+		j++;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	int argsize;
@@ -115,6 +155,7 @@ int main(int argc, char *argv[])
 	
 	int terminate;
 	int i;
+	int j;
 	float count;
 	double nb;
 	int comma;
@@ -128,6 +169,7 @@ int main(int argc, char *argv[])
 
 	terminate = 0;
 	i = 0;
+	j = 0;
 	count = 0;
 	nb = 0;
 	comma = 0;
@@ -146,7 +188,7 @@ int main(int argc, char *argv[])
 		getIntegers(argsize, argv[1], integers, &intID, &i, &count);
 		makeNumber(argsize, integers, &intID, &count, &nb);
 		terminate = getOperator(argv[1][i], argv[1][i + 1], argsize, operators, &opID, &i, &count, &comma);
-		printf("comma = %d\n", comma);
+		//printf("comma = %d\n", comma);
 		if (terminate == 1)
 		{
 			return(0);
@@ -161,8 +203,26 @@ int main(int argc, char *argv[])
 			makeDecimal(argsize, integers, &intID, &count, &nb);
 			getNumber(argsize, numbers, &nbID, &nb);
 		}
+		//printf("numbers[%d] = %f\n", nbID - 1, numbers[nbID - 1]);
 	}
 	getNumberOfOperators(argsize, operators, &nbOfOperators);
 	printf("Operators string is set as: %s\n", operators);
+	printf("numbers[0] = %f\n", numbers[0]);
+	double priorityResults[nbOfOperators + 1];
+	//while (j <= nbOfOperators + 1)
+	{
+		priorityResults[j] = 0;
+		j++;
+	}
+	printf("numbers[0] = %f\n", numbers[0]);
+	j = 0;	
+	double finalResult[nbOfOperators + 1];
+	//while (j <= nbOfOperators + 1)
+	{
+		finalResult[j] = 0;
+		j++;
+	}
+	//printf("numbers[0] = %f\n", numbers[0]);
+	doCalculus(argsize, operators, numbers, nbOfOperators, priorityResults, finalResult);
 	return(0);
 }
