@@ -15,11 +15,8 @@ int verifyCalculusValidity(int argsize, char argv[argsize])
 	return(terminate);
 }
 
-int obtainOperator(char argv, int argsize, char operators[argsize], int *opID)
+int obtainOperator(char argv, int argsize, char operators[argsize], int *opID, int *terminate)
 {
-	int invalidOperator;
-
-	invalidOperator = 0;
 	if (argv == '+' || argv == '-' || argv == 'x' || argv == '/' || argv == ',' || argv == '.')
 	{
 		operators[*opID] = argv;
@@ -27,7 +24,7 @@ int obtainOperator(char argv, int argsize, char operators[argsize], int *opID)
 	else if (argv != '\0')
 	{
 		printf("Invalid operator, please try again.\n");
-		invalidOperator = 1;
+		*terminate = 1;
 	}
 	return(invalidOperator);
 }
@@ -37,18 +34,18 @@ void obtainInteger(char argv, int argsize, int integers[argsize], int *intID)
 	integers[*intID] = (int) argv - 48;
 }
 
-void makeNumber(int argsize, int integers[argsize], int *intID, float *count, double *x)
+void makeNumber(int argsize, int integers[argsize], int *intID, float *count, double *nb)
 {
-	*x += integers[*intID - (int) *count] * pow(10, *count - 1);
+	*nb += integers[*intID - (int) *count] * pow(10, *count - 1);
 	(*count)--;
 }
 
-void makeDecimalNumber(int argsize, int integers[argsize], int *intID, float *count, float *decimalCount, double *x)
+void makeDecimalNumber(int argsize, int integers[argsize], int *intID, float *count, float *decimalCount, double *nb)
 {
 
 }
 
-void getOperator(char argv, int argsize, char operators[argsize], char checkDoubleOperator, int *i, int *terminate, float *count, int *opID)
+void getOperator(char argv, int argsize, char operators[argsize], char checkDoubleOperator, int *i, int *terminate, float *count, int *opID, int *terminate)
 {
 	int invalidOperator;
 
@@ -62,7 +59,7 @@ void getOperator(char argv, int argsize, char operators[argsize], char checkDoub
 		}
 		else
 		{
-			*terminate = obtainOperator(argv, argsize, operators, opID);
+			obtainOperator(argv, argsize, operators, opID, terminate);
 			(*i)++;
 			*count = 0;
 		}
@@ -82,21 +79,21 @@ void getIntegers(int argsize, char argv[argsize], int integers[argsize], int *in
 
 void getNumber(int argsize, int integers[argsize], int *intID, float *count, double numbers[argsize], int *nbID)
 {
-	double x;
+	double nb;
 
-	x = 0;
+	nb = 0;
 	while (*count > 0)
 	{
-		makeNumber(argsize, integers, intID, count, &x);
+		makeNumber(argsize, integers, intID, count, &nb);
 	}
-		numbers[*nbID] = x;
+		numbers[*nbID] = nb;
 		(*nbID)++;
 		(*opID)++;
 }
 
 void getDecimalNumber(int argsize, int integers[argsize], int *intID, float *count, float *decimalCount, double numbers[argsize], int *nbID)
 {
-	double x;
+	double nb;
 
 }
 
@@ -151,6 +148,8 @@ int main(int argc, char *argv[])
 	int i;
 	int argsize;
 	int numberOfOperators;
+	int nb;
+	int dNb;
 	int terminate;
 	int intID;
 	int nbID;
@@ -159,6 +158,8 @@ int main(int argc, char *argv[])
 	float decimalCount;
 	
 	i = 0;
+	nb = 0;
+	dNb = 0;
 	terminate = 0;
 	intID = 0;
 	nbID = 0;
@@ -177,7 +178,7 @@ int main(int argc, char *argv[])
 	while (i < argsize)
 	{
 		getIntegers(argsize, argv[1], integers, &intID, &i, &count);
-		getOperator(argv[1][i], argsize, operators, argv[1][i + 1], &i, &terminate, &count, &opID);
+		getOperator(argv[1][i], argsize, operators, argv[1][i + 1], &i, &terminate, &count, &opID, &terminate);
 		if (terminate == 1)
 		{
 			return(0);
@@ -187,7 +188,8 @@ int main(int argc, char *argv[])
 			decimalCount = *count;
 			*count = 0;
 			getIntegers(argsize, argv[1], integers, &intID, &i, &count);
-			getDecimalNumber(argsize, integers, &intID, &count, &decimalCount, numbers, &nbID);
+			makeNumber(argsize, integers, &intId, &count, &nb);
+			makeDecimalNumber(argsize, integers, &intID, &count, &decimalCount, numbers, &nbID);
 		}
 		else if (operators[*opID] != ',' && operators[*opID] != '.')
 		{
