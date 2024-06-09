@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
 	printf("Operators string is set as: %s\n", operators);
 	printf("numbers[0] = %f\n", numbers[0]);
 	double priorityResults[nbOfOperators + 1];
-	//while (j <= nbOfOperators + 1)
+	while (j <= nbOfOperators + 1)
 	{
 		priorityResults[j] = 0;
 		j++;
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 	printf("numbers[0] = %f\n", numbers[0]);
 	j = 0;	
 	double finalResult[nbOfOperators + 1];
-	//while (j <= nbOfOperators + 1)
+	while (j <= nbOfOperators + 1)
 	{
 		finalResult[j] = 0;
 		j++;
