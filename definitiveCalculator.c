@@ -13,6 +13,11 @@ int verifyInputValidity(int argsize, char argv[argsize])
 		printf("Calculus ending with an operator or comma, please try again.\n");
 		terminate = 1;
 	}
+	else if (argv[0] == '+' || argv[0] == '-' || argv[0] == 'x' || argv[0] == '/' || argv[0] == ',' || argv[0] == '.')
+	{
+		printf("Calculus starts with an operator or comma, please try again.\n");
+		terminate = 1;
+	}
 	return(terminate);
 }
 
@@ -54,7 +59,6 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 	int terminate;
 
 	terminate = 0;
-	*comma = 0;
 	if (isdigit(currentChar) == 0)
 	{
 		if (*i + 1 < argsize && isdigit(nextChar) == 0)
@@ -68,14 +72,25 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 			{
 				operators[*opID] = currentChar;
 				(*opID)++;
+				*comma = 0;
 			}
-			else if (currentChar == ',' || currentChar == '.')
+			else if (currentChar == ',' && *comma != 1 || currentChar == '.' && *comma != 1)
 			{
 				*comma = 1;
+			}
+			else if (currentChar == ',' && *comma == 1 || currentChar == '.' && *comma == 1)
+			{
+				printf("Two consecutive commas, please try again.\n");
+				terminate = 1;
 			}
  			else if (currentChar != '\0')
 			{
 				printf("Invalid operator, please try again. To multiply, use 'x' instead of '*'.\n");
+				terminate = 1;
+			}
+			else
+			{
+				printf("No operator detected, please enter your calculus without any whitespace\n");
 				terminate = 1;
 			}
 		}
