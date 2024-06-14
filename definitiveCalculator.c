@@ -59,7 +59,7 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 	int terminate;
 
 	terminate = 0;
-	if (isdigit(currentChar) == 0)
+	if (isdigit(currentChar) == 0 && currentChar != '\0')
 	{
 		if (*i + 1 < argsize && isdigit(nextChar) == 0)
 		{
