@@ -88,11 +88,6 @@ int getOperator(char currentChar, char nextChar, int argsize, char operators[arg
 				printf("Invalid operator, please try again. To multiply, use 'x' instead of '*'.\n");
 				terminate = 1;
 			}
-			else
-			{
-				printf("No operator detected, please enter your calculus without any whitespace\n");
-				terminate = 1;
-			}
 		}
 		(*i)++;
 	}
@@ -114,9 +109,22 @@ void getNumberOfOperators(int argsize, char operators[argsize], int *nbOfOperato
 	*nbOfOperators = strlen(operatorsSizeSample);
 }
 
+int verifyPresenceOfOperator(int argsize, char operators[argsize])
+{
+	int terminate;
+
+	terminate = 0;
+	if (operators[1] == '\0' && operators[0] != '+' && operators[0] != '-' && operators[0] != 'x' && operators[0] != '/')
+	{
+		printf("No operator detected, please insert your calculus without any whitespace as a command line argument.\n");
+		terminate = 1;
+	}
+	return(terminate);
+}
+
 void add(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], double finalResult[2][nbOfOperators + 1], int *i, int *j)
 {
-	printf("finalResult[0][%d] = %f\n", *i, finalResult[0][*i]);
+	//printf("finalResult[0][%d] = %f\n", *i, finalResult[0][*i]);
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
@@ -140,7 +148,7 @@ void add(int argsize, double numbers[argsize], int nbOfOperators, double priorit
 
 void subtract(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], double finalResult[2][nbOfOperators + 1], int *i, int *j)
 {
-	printf("finalResult[0][%d] = %f\n", *i, finalResult[0][*i]);
+	//printf("finalResult[0][%d] = %f\n", *i, finalResult[0][*i]);
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
@@ -325,6 +333,11 @@ int main(int argc, char *argv[])
 			makeDecimal(argsize, integers, &intID, &count, &nb);
 			getNumber(argsize, numbers, &nbID, &nb);
 		}
+	}
+	terminate = verifyPresenceOfOperator(argsize, operators);
+	if (terminate == 1)
+	{
+		return(0);
 	}
 	getNumberOfOperators(argsize, operators, &nbOfOperators);
 
