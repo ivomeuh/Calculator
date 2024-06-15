@@ -103,7 +103,7 @@ void getNumber(int argsize, double numbers[argsize], int *nbID, double *nb)
 
 void getNumberOfOperators(int argsize, char operators[argsize], int *nbOfOperators)
 {
-	char operatorsSizeSample[10];
+	char operatorsSizeSample[argsize];
 
 	sscanf(operators, "%[^NULL]", operatorsSizeSample);
 	*nbOfOperators = strlen(operatorsSizeSample);
@@ -128,17 +128,17 @@ void add(int argsize, double numbers[argsize], int nbOfOperators, double priorit
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
 	}
 	if (priorityResults[0][*j + 1] == 1 && *j <= nbOfOperators)
 	{
 		numbers[*j + 1] = priorityResults[1][*j + 1];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
 	}
 	if (finalResult[0][*i] == 1)
 	{
 		numbers[*j] = finalResult[1][*i];
-		printf("numbers[%d] = finalResult[1][%d] = %f\n", *j, *i, finalResult[1][*i]);
+		//printf("numbers[%d] = finalResult[1][%d] = %f\n", *j, *i, finalResult[1][*i]);
 	}
 	finalResult[1][*i + 1] = numbers[*j] + numbers[*j + 1];
 	finalResult[0][*i + 1] = 1;
@@ -152,17 +152,17 @@ void subtract(int argsize, double numbers[argsize], int nbOfOperators, double pr
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
 	}
 	if (priorityResults[0][*j + 1] == 1 && *j <= nbOfOperators)
 	{
 		numbers[*j + 1] = priorityResults[1][*j + 1];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
 	}
 	if (finalResult[0][*i] == 1)
 	{
 		numbers[*j] = finalResult[1][*i];
-		printf("numbers[%d] = finalResult[1][%d] = %f\n", *j, *i, finalResult[1][*i]);
+		//printf("numbers[%d] = finalResult[1][%d] = %f\n", *j, *i, finalResult[1][*i]);
 	}
 	finalResult[1][*i + 1] = numbers[*j] - numbers[*j + 1];
 	finalResult[0][*i + 1] = 1;
@@ -170,17 +170,17 @@ void subtract(int argsize, double numbers[argsize], int nbOfOperators, double pr
 	(*i)++;
 }
 
-void multiply(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], int *j)
+void multiply(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], int *j, int *priorityCount)
 {
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
 	}
 	if (priorityResults[0][*j + 1] == 1 && *j <= nbOfOperators)
 	{
 		numbers[*j + 1] = priorityResults[1][*j + 1];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
 	}
 	priorityResults[1][*j] = numbers[*j] * numbers[*j + 1];
 	priorityResults[0][*j] = 1;
@@ -190,19 +190,24 @@ void multiply(int argsize, double numbers[argsize], int nbOfOperators, double pr
 		priorityResults[1][*j + 1] = priorityResults[1][*j];
 		priorityResults[0][*j + 1] = 1;
 	}
+	if (*priorityCount > 0)
+	{
+		priorityResults[1][*j - *priorityCount] = priorityResults[1][*j];
+	}
+	(*priorityCount)++;
 }
 
-void divide(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], int *j)
+void divide(int argsize, double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], int *j, int *priorityCount)
 {
 	if (priorityResults[0][*j] == 1)
 	{
 		numbers[*j] = priorityResults[1][*j];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j, *j, priorityResults[1][*j]);
 	}
 	if (priorityResults[0][*j + 1] == 1 && *j <= nbOfOperators)
 	{
 		numbers[*j + 1] = priorityResults[1][*j + 1];
-		printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
+		//printf("numbers[%d] = priorityResults[1][%d] = %f\n", *j + 1, *j + 1, priorityResults[1][*j + 1]);
 	}
 	priorityResults[1][*j] = numbers[*j] / numbers[*j + 1];
 	priorityResults[0][*j] = 1;
@@ -212,24 +217,36 @@ void divide(int argsize, double numbers[argsize], int nbOfOperators, double prio
 		priorityResults[1][*j + 1] = priorityResults[1][*j];
 		priorityResults[0][*j + 1] = 1;
 	}
+	if (priorityCount > 0)
+	{
+		priorityResults[1][*j - *priorityCount] = priorityResults[1][*j];
+	}
+	(*priorityCount)++;
 }
 
 void doCalculus(int argsize, char operators[argsize], double numbers[argsize], int nbOfOperators, double priorityResults[2][nbOfOperators + 1], double finalResult[2][nbOfOperators + 1])
 {
 	int i;
 	int j;
+	int priorityCount;
 
 	i = 0;
 	j = 0;
+	priorityCount = 0;
 	while (j <= nbOfOperators)
 	{
 		if (operators[j] == 'x')
 		{
-			multiply(argsize, numbers, nbOfOperators, priorityResults, &j);
+			multiply(argsize, numbers, nbOfOperators, priorityResults, &j, &priorityCount);
+
 		}
 		else if (operators[j] == '/')
 		{
-			divide(argsize, numbers, nbOfOperators, priorityResults, &j);
+			divide(argsize, numbers, nbOfOperators, priorityResults, &j, &priorityCount);
+		}
+		else
+		{
+			priorityCount = 0;
 		}
 		j++;
 	}
@@ -347,5 +364,6 @@ int main(int argc, char *argv[])
 	initializeFinalResult(nbOfOperators, finalResult);
 
 	doCalculus(argsize, operators, numbers, nbOfOperators, priorityResults, finalResult);
+	printf("\n");
 	return(0);
 }
